@@ -108,6 +108,10 @@ public:
 };
 
 class Menu:ItemList {
+private:
+    int numberOfAppetiser;
+    int numberOfMainCourse;
+    int numberOfBeverage;
 public:
 	Menu(string link){
 		ifstream menu; 
@@ -117,6 +121,8 @@ public:
 		if (!menu) cout << "File at given address does not exist" << endl;
 		string str;
 		vector<string> separated;
+        numberOfAppetiser = 0;
+        numberOfMainCourse = 0;
 		while (getline(menu, line)) {
 			separated.clear();
 			int i = line.find(','); // find first appearance of separator ','
@@ -129,10 +135,14 @@ public:
 			separated.push_back(line.substr(next_after_last, line.length()-next_after_last)); // add last substring
 			switch (line[0]){
 				case 'a':
-					items.push_back(new Appetiser(separated[1], separated[3], separated[2], separated[4], separated[5]));
+					//items.push_back(new Appetiser(separated[1], separated[3], separated[2], separated[4], separated[5]));
+                    items.insert(items.begin(), new Appetiser(separated[1], separated[3], separated[2], separated[4], separated[5]));
+                    numberOfAppetiser++;
 					break;
 				case 'm':
-					items.push_back(new MainCourse(separated[1], separated[3], separated[2]));
+					//items.push_back(new MainCourse(separated[1], separated[3], separated[2]));
+                    items.insert(items.begin()+numberOfAppetiser, new MainCourse(separated[1], separated[3], separated[2]));
+                    numberOfMainCourse++;
 					break;
 				case 'b':
 					items.push_back(new Beverage(separated[1], separated[3], separated[2], separated[6], separated[7]));
@@ -141,18 +151,27 @@ public:
 					throw "Unexpected input in given csv file";
 			}
 		}
+        numberOfBeverage = items.size() - numberOfAppetiser - numberOfMainCourse;
 	}
 	string toString() {
 		string menu = "\t\tMenu:\n";
-		//cout << "----------Appetisers----------\n";
-		for (auto& item: items){
-			cout << item->toString() << endl;
-		}
+        menu += "-------------Appetisers--------------\n";
+        for (int i=0; i<numberOfAppetiser; i++)
+            menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+        menu += "-------------Main Course-------------\n";
+        for (int i=numberOfAppetiser; i<numberOfAppetiser+numberOfMainCourse; i++)
+            menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+        menu += "-------------Beverage----------------\n";
+        for (int i=numberOfAppetiser+numberOfMainCourse; i<items.size(); i++)
+            menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+        return menu;
+        /*
 		for (int i=0; i<items.size(); i++){
 			//cout << '(' << i+1 << ") " << items[i]->getName() << ": £" << items[i]->getPrice() << ", " << items[i]->getCalories() << endl;
 			cout << '(' << i+1 << ") ";
 			cout << items[i]->toString() << endl;
 		}
+        */
 	}
 };
 
@@ -168,7 +187,6 @@ public:
 };
 
 int main(){
-	Menu menu ("/Users/venka/Desktop/Adam/menu.csv");
-	menu.toString();
-	
+	Menu menu ("/Users/venka/Desktop/Take-away food ordering system/menu.csv");
+	cout << menu.toString();
 }
