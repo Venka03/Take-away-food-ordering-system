@@ -16,14 +16,13 @@ public:
 	};
 	void add(Item* choice){
 		items.push_back(choice);
-	}
-	void remove(Item* choice){
-		vector<Item*>::iterator i = find(items.begin(), items.end(), choice);
-		items.erase(i);
+		cout << choice->getName() << " was added to order" << endl;
 	}
 	void remove(int i){
 		if (i > items.size() || i <= 0) throw "Number of item is out of the range"; 
+		string name = (*(items.begin()+i-1))->getName();
 		items.erase(items.begin()+i-1);
+		cout << name << " was deleted from the order" << endl;
 	}
 	void calculateTotal(){
 		two4one = 0; // counter of items with 2-4-1 offer
@@ -50,11 +49,11 @@ public:
 		receipt.close();
 	}
 	string toString(){
-		string order = "";
-        for (int i=0; i<items.size(); i++)
+		string order = "===== Checkout =====\n";
+        for (int i=0; i<numberOfEntries(); i++)
             order += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
 		calculateTotal();
-		int saved = 0;
+		float saved = 0;
 		for (int i=0; i<two4one/2; i++)
 			saved += prices2_4_1[i];
 		if (saved != 0)
@@ -62,4 +61,5 @@ public:
 		order += "Total: £" + to_string(total);
 		return order;
 	}
+	bool isEmpty(){ return items.empty(); }
 };

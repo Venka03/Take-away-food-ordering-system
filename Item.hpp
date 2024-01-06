@@ -109,8 +109,9 @@ public:
 	}
 	virtual string toString() = 0;
 	Item* getItem(int i){
-		if (i > items.size() || i <= 0)
+		if (i > numberOfEntries() || i <= 0)
 			throw "Number of item is out of the range";
 		return items[i-1];
 	}
+	int numberOfEntries(){ return items.size();}
 };
