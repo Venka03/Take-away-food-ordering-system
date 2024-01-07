@@ -30,18 +30,20 @@ public:
 				i = line.find(',', next_after_last); // find next appearance of separator
 			}
 			separated.push_back(line.substr(next_after_last, line.length()-next_after_last)); // add last substring
+			// add items to menu in the way that first appears appetisers, then main course and beverages in the end
 			switch (line[0]){
 				case 'a':
-					//items.push_back(new Appetiser(separated[1], separated[3], separated[2], separated[4], separated[5]));
+					// added to the beginning of the menu
                     items.insert(items.begin(), new Appetiser(separated[1], separated[3], separated[2], separated[4], separated[5]));
                     numberOfAppetiser++;
 					break;
 				case 'm':
-					//items.push_back(new MainCourse(separated[1], separated[3], separated[2]));
+					// added after the last appetiser
                     items.insert(items.begin()+numberOfAppetiser, new MainCourse(separated[1], separated[3], separated[2]));
                     numberOfMainCourse++;
 					break;
 				case 'b':
+					// added to the end of menu
 					items.push_back(new Beverage(separated[1], separated[3], separated[2], separated[6], separated[7]));
 					break;
 				default:

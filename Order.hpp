@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "Item.hpp"
 #pragma once
 
@@ -21,7 +22,7 @@ public:
 	void remove(int i){
 		if (i > items.size() || i <= 0) throw "Number of item is out of the range"; 
 		string name = (*(items.begin()+i-1))->getName();
-		items.erase(items.begin()+i-1);
+		items.erase(items.begin()+i-1); // -1 since in the order items are starting from 1, however in items list entries starts with 0
 		cout << name << " was deleted from the order" << endl;
 	}
 	void calculateTotal(){
@@ -57,8 +58,8 @@ public:
 		for (int i=0; i<two4one/2; i++)
 			saved += prices2_4_1[i];
 		if (saved != 0)
-			order += "2-4-1 discount applied! Savings: £" + to_string(saved) + "\n";
-		order += "Total: £" + to_string(total);
+			order += "2-4-1 discount applied! Savings: £" + Item::stringPrice(saved) + "\n";
+		order += "Total: £" + Item::stringPrice(total);
 		return order;
 	}
 	bool isEmpty(){ return items.empty(); }

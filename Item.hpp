@@ -1,8 +1,22 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 #pragma once // to avoid error redefinition of 'Item' etc
 
 using namespace std;
+
+string stringRound(float number, int precision){
+	// save in string rounded 'number' to the 'precision' significant digit after comma
+	if (precision < 1) throw "Wrong precision parameter, precision should be bigger than 0";
+	string str_number = "";
+	// round is used since without it number could be smaller by 1 due to the way numbers are stored in memory
+	int n = pow(10, precision);
+	int k = round(number * n);
+    for (int i=0; i < precision; i++)
+        str_number.insert(str_number.begin(), '0' + (k / (int) pow(10, i)) % 10);
+	str_number = to_string( (int) k / n) + '.' + str_number;
+	return str_number;
+}
 
 class Item {
 protected:
@@ -21,11 +35,7 @@ public:
 		this->price = stof(price);
 	}
 	virtual string toString(){
-		string str_price = to_string(price);
-		int i = str_price.find('.');
-		if (i == -1) str_price += ".00";
-		else str_price = str_price.substr(0, i + 2 + 1); // + 2 for precision
-		string str = name + ": £" + str_price + ", "  + to_string(calories) + " cal";
+		string str = name + ": £" + stringPrice(price) + ", "  + to_string(calories) + " cal";
 		return str;
 	}
 	string getName(){
@@ -36,6 +46,9 @@ public:
 	}
 	float getPrice(){
 		return price;
+	}
+	static string stringPrice(float price){
+		return stringRound(price, 2);
 	}
 	virtual bool isTwoForOne() {return false;} // 2-4-1 is not applied to all products except the once with y in corresponding 2-4-1 column
 };
@@ -86,11 +99,7 @@ public:
 		string str = Item::toString();
 		str += "(" + to_string(volume) + "ml";
 		if (isAlcoholic()) {
-			string str_abv = to_string(abv);
-			int i = str_abv.find('.');
-			if (i == -1) str_abv += ".0";
-			else str_abv = str_abv.substr(0, i + 1 + 1); // + 1 for precision
-			str += ", " + str_abv + "% abv)";
+			str += ", " + stringRound(abv, 1) + "% abv)";
 		}
 		else str += ")";
 		return str;
@@ -109,6 +118,7 @@ public:
 	}
 	virtual string toString() = 0;
 	Item* getItem(int i){
+		// by given number, return item from the items vector
 		if (i > numberOfEntries() || i <= 0)
 			throw "Number of item is out of the range";
 		return items[i-1];
