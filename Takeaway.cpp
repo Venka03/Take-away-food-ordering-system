@@ -10,6 +10,7 @@
 using namespace std;
 void printInstructions(){
     cout << "menu - display the menu" << endl;
+    cout << "sortMenu [asc/desc] - display the sorted menu in ascending or descending" << endl;
     cout << "add [INDEXES] - add an item to the order by numeric index in the menu (starting at 1)" << endl;
     cout << "remove [INDEXES] - remove item from order by numeric index in the order (starting at 1)" << endl;
     cout << "checkout - display the items in the order, the price, and discount savings" << endl;
@@ -22,10 +23,13 @@ int main()
     vector <string> parameters;
     
     Menu menu = Menu("menu.csv");  // Create a menu object from a CSV file
-
+    Menu sortedMenu = Menu(); // menu with increasing or decreasing order of items by price
     Order order = Order();  // Create an order object
     // some temporary variables used further in execution
     int tmp;
+    // used to identify which menu was displayed last, 
+    // so to know from which menu (using which order of items) user wants to add items to the order
+    bool lastMenuSorted = false;
     string answer;
     string command;
 
@@ -52,7 +56,17 @@ int main()
         if (!parameters.empty()) command = parameters[0];
         
         if (command.compare("menu") == 0) {
-            cout << menu.toString();
+            cout << menu.toString() << endl; // endl to understand where menu ends
+            lastMenuSorted = false;
+        }
+        else if (command.compare("sortMenu") == 0) {
+            if (parameters[1] != "asc" && parameters[1] != "desc") cout << "There is no such option" << endl;
+            else {
+                if (parameters[1] == "asc") sortedMenu = menu.sortedMenu(true);
+                else sortedMenu = menu.sortedMenu(false);
+                lastMenuSorted = true;
+                cout << sortedMenu.toString() << endl;
+            }
         }
         else if (command.compare("add") == 0)
         {
@@ -60,10 +74,14 @@ int main()
 			for (int i=1; i<n; i++){
                 // for each number given by user add menu entry with corresponding number to the user's order
                 tmp = stoi(parameters[i]);
+                // no need to do two options when menu is sorted or no since their length is the same
                 if (tmp > menu.numberOfEntries() || tmp < 1)
                     cout << "There is no item in order with number " << tmp << endl;
 				else {
-                    Item* choice = menu.getItem(tmp);
+                    // so user chooses items by their corresponding number in sorted menu
+                    Item* choice;
+                    if (lastMenuSorted) choice = sortedMenu.getItem(tmp);
+                    else choice = menu.getItem(tmp);
 				    order.add(choice);
                 }
 			}

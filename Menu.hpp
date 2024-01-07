@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "Item.hpp"
 #pragma once
 
@@ -9,7 +10,15 @@ private:
     int numberOfAppetiser;
     int numberOfMainCourse;
     int numberOfBeverage;
+	bool sorted = false;
+	void setSorted(bool sorted){this->sorted = sorted;}
 public:
+	Menu(): ItemList(){
+		numberOfAppetiser = 0;
+		numberOfMainCourse = 0;
+		numberOfBeverage = 0;
+	}
+	Menu(vector<Item*> item) : ItemList(item){}
 	Menu(string link){
 		ifstream menu; 
 		string line;
@@ -50,19 +59,36 @@ public:
 					throw "Unexpected input in given csv file";
 			}
 		}
-        numberOfBeverage = items.size() - numberOfAppetiser - numberOfMainCourse;
+        numberOfBeverage = numberOfEntries() - numberOfAppetiser - numberOfMainCourse;
 	}
 	string toString() {
 		string menu = "\t\tMenu:\n";
-        menu += "-------------Appetisers--------------\n";
-        for (int i=0; i<numberOfAppetiser; i++)
-            menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
-        menu += "-------------Main Course-------------\n";
-        for (int i=numberOfAppetiser; i<numberOfAppetiser+numberOfMainCourse; i++)
-            menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
-        menu += "-------------Beverage----------------\n";
-        for (int i=numberOfAppetiser+numberOfMainCourse; i<items.size(); i++)
-            menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
-        return menu;
+		if (sorted){
+			menu += "---------Sorted by the price---------\n";
+			for (int i=0; i<numberOfEntries(); i++)
+				menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+		}
+		else {
+			menu += "-------------Appetisers--------------\n";
+			for (int i=0; i<numberOfAppetiser; i++)
+				menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+			menu += "-------------Main Course-------------\n";
+			for (int i=numberOfAppetiser; i<numberOfAppetiser+numberOfMainCourse; i++)
+				menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+			menu += "-------------Beverage----------------\n";
+			for (int i=numberOfAppetiser+numberOfMainCourse; i<numberOfEntries(); i++)
+				menu += "(" + to_string(i+1) + ") " + items[i]->toString() + "\n";
+		}
+		return menu;
+	}
+	void sortMenu(bool increasing) {
+		if (increasing) sort(items.begin(), items.end(), Item::isSmaller);
+		else sort(items.begin(), items.end(), Item::isGreater);
+	}
+	Menu sortedMenu(bool increasing){
+		Menu sorted (*this);
+		sorted.sortMenu(increasing);
+		sorted.setSorted(true);
+		return sorted;
 	}
 };

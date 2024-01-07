@@ -47,6 +47,18 @@ public:
 	float getPrice(){
 		return price;
 	}
+	bool operator<(Item& other){
+		return this->price < other.price;
+	}
+	bool operator>(Item& other){
+		return this->price > other.price;
+	}
+	static bool isSmaller(Item* first, Item* second){
+		return *first < *second;
+	}
+	static bool isGreater(Item* first, Item* second){
+		return *first > *second;
+	}
 	static string stringPrice(float price){
 		return stringRound(price, 2);
 	}
@@ -115,6 +127,9 @@ protected:
 public:
 	ItemList(){
 		this->items = {};
+	}
+	ItemList(vector<Item*> items){
+		this->items = items;
 	}
 	virtual string toString() = 0;
 	Item* getItem(int i){

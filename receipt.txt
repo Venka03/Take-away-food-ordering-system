@@ -1,13 +1,10 @@
 ===== Checkout =====
-(1) Garlic bread: £3.99, 500 cal (2-4-1)
-(2) Pulled BBQ Jackfruit: £4.99, 500 cal (2-4-1)
-(3) Buffalo wings: £3.99, 450 cal (2-4-1)
-(4) Buffalo wings: £3.99, 450 cal (2-4-1)
-(5) Nachos: £4.99, 600 cal (shareable)
-(6) Pulled BBQ Jackfruit: £4.99, 500 cal (2-4-1)
-(7) Garlic bread: £3.99, 500 cal (2-4-1)
-(8) Pulled BBQ Jackfruit: £4.99, 500 cal (2-4-1)
-(9) Buffalo wings: £3.99, 450 cal (2-4-1)
-(10) Pulled BBQ Jackfruit: £4.99, 500 cal (2-4-1)
-2-4-1 discount applied! Savings: £15.960000
-Total: £28.939997
+(1) Water: £1.50, 0 cal(330ml)
+(2) Coke: £2.50, 140 cal(330ml)
+(3) Garlic bread: £3.99, 500 cal (2-4-1)
+(4) Pulled BBQ Jackfruit: £4.99, 500 cal (2-4-1)
+(5) Burger: £9.99, 950 cal
+(6) Fish & chips: £8.99, 1000 cal
+(7) Mac & cheese: £7.99, 850 cal
+2-4-1 discount applied! Savings: £3.99
+Total: £35.96
